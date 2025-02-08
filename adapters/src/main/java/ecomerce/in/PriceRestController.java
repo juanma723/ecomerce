@@ -1,14 +1,13 @@
 package ecomerce.in;
 
 import ecomerce.Price.Price;
+import ecomerce.port.FindPriceUseCase;
 import org.openapitools.api.PricesApi;
 import org.openapitools.model.PriceResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ecomerce.port.FindPriceUseCase;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -34,11 +33,8 @@ public class PriceRestController implements PricesApi {
                 ProductIdParser.parse(productId),
                 BrandIdParser.parse(brandId));
 
-        if (price.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return price.map(value -> new ResponseEntity<>(PriceRestControllerMapper.toResponse(value),
-                HttpStatus.OK)).get();
+        return price
+                .map(value -> ResponseEntity.ok(PriceRestControllerMapper.toResponse(value)))
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
