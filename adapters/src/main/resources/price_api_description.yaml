@@ -1,0 +1,109 @@
+openapi: 3.0.3
+info:
+  title: PRICES API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+
+
+paths:
+  /prices:
+    get:
+      summary: Get price
+      description: Get prices based on the provided parameters.
+      operationId: getPrice
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "2020-06-14T00:00:00+02:00"
+            format : date-time
+          description: "Application date e.g. 2020-06-14T00:00:00+02:00"
+        - name: productId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: "35455"
+          description: "The id of the product, e.g. 35455"
+        - name: brandId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: "1"
+          description: "The id of the brand, e.g. 1"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    PriceResponse:
+      type: object
+      properties:
+        tariffId:
+          type: integer
+          format: int64
+          description: "The id of the tariff to apply"
+          example: 1
+        productId:
+          type: integer
+          format: int64
+          description: "The ID of the product"
+          example: 35455
+        brandId:
+          type: integer
+          format: int64
+          description: "The ID of the brand"
+          example: 1
+        price:
+          type: number
+          format: double
+          description: "The price to apply"
+          example: 35.5
+        currency:
+          type: string
+          description: "The currency of the price"
+          example: "EUR"
+        startDate:
+          type: string
+          description: "The start date of the price"
+          example: "2020-06-14T00:00:00+02:00"
+          format: date-time
+        endDate:
+          type: string
+          description: "The end date of the price"
+          example: "2020-06-14T00:00:00+02:00"
+          format : date-time
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        description:
+          type: string
+
+
+
